@@ -11,7 +11,7 @@ func main() {
 	database.Connect()
 	app := fiber.New()
 
-	routes.Setup(app)
+	routes.SetupPost(app)
 
 	app.Listen(":8000")
 }
