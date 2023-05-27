@@ -15,8 +15,7 @@ func Other(c *fiber.Ctx) error {
 
 func Register(c *fiber.Ctx) error {
 	user := models.User{}
-	user.Firstname = "Sajal"
-	user.Lastname = "Saraf"
-	user.Email = "sajalsaraf161203@gmail.com"
+	user.Firstname = "sajal"
+	user.Lastname = "gfg"
 	return c.JSON(user)
 }
