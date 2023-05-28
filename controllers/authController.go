@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/sajalsaraf/Admin-app.git/database"
 	"github.com/sajalsaraf/Admin-app.git/models"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -45,6 +46,9 @@ func Register(c *fiber.Ctx) error {
 	user.Lastname = data["last_name"]
 	user.Email = data["email_id"]
 	user.Password = password
+
+	db := database.DB
+	db.Create(&user)
 
 	return c.JSON(user)
 }

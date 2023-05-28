@@ -8,12 +8,15 @@ import (
 	"gorm.io/gorm"
 )
 
+var DB *gorm.DB
+
 func Connect() {
 	database, err := gorm.Open(mysql.Open("root:Sajal@123@/adminapp"), &gorm.Config{})
 	if err != nil {
 		fmt.Println("failed to connect database")
 	}
 	fmt.Println("sajal")
+	DB = database
 
 	database.AutoMigrate(&models.User{})
 }
