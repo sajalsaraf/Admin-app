@@ -5,5 +5,5 @@ type User struct {
 	Firstname string
 	Lastname  string
 	Email     string `gorm:"unique"`
-	Password  string
+	Password  []byte
 }

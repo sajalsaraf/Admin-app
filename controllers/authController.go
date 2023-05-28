@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/sajalsaraf/Admin-app.git/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Hello(c *fiber.Ctx) error {
@@ -31,11 +32,19 @@ func Register(c *fiber.Ctx) error {
 		})
 	}
 
+	pwd_string := data["password"]
+	password, err := bcrypt.GenerateFromPassword([]byte(pwd_string), 14)
+	if err != nil {
+		return c.JSON(fiber.Map{
+			"msg": "unable to hash password",
+		})
+	}
+
 	user := models.User{}
 	user.Firstname = data["first_name"]
 	user.Lastname = data["last_name"]
 	user.Email = data["email_id"]
-	user.Password = data["password"]
+	user.Password = password
 
 	return c.JSON(user)
 }
