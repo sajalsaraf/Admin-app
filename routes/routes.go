@@ -9,4 +9,5 @@ func Setup(app *fiber.App) {
 	app.Get("/", controllers.Hello)
 	app.Get("/first", controllers.Other)
 	app.Post("/api/register", controllers.Register)
+	app.Post("/api/login", controllers.Login)
 }
