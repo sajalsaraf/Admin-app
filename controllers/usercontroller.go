@@ -4,7 +4,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/sajalsaraf/Admin-app.git/database"
 	"github.com/sajalsaraf/Admin-app.git/models"
-	"golang.org/x/crypto/bcrypt"
 )
 
 func AllUsers(c *fiber.Ctx) error {
@@ -22,9 +21,7 @@ func CreateUser(c *fiber.Ctx) error {
 		return err
 	}
 
-	password, _ := bcrypt.GenerateFromPassword([]byte("1234"), 14)
-
-	user.Password = password
+	user.SetPassword("1234")
 	database.DB.Create(&user)
 
 	return c.JSON(user)

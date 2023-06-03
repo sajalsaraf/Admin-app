@@ -9,7 +9,6 @@ import (
 	"github.com/sajalsaraf/Admin-app.git/database"
 	"github.com/sajalsaraf/Admin-app.git/models"
 	"github.com/sajalsaraf/Admin-app.git/util"
-	"golang.org/x/crypto/bcrypt"
 )
 
 func Hello(c *fiber.Ctx) error {
@@ -37,18 +36,19 @@ func Register(c *fiber.Ctx) error {
 	}
 
 	pwd_string := data["password"]
-	password, err := bcrypt.GenerateFromPassword([]byte(pwd_string), 14)
-	if err != nil {
-		return c.JSON(fiber.Map{
-			"msg": "unable to hash password",
-		})
-	}
+	// password, err := bcrypt.GenerateFromPassword([]byte(pwd_string), 14)
+	// if err != nil {
+	// 	return c.JSON(fiber.Map{
+	// 		"msg": "unable to hash password",
+	// 	})
+	// }
 
 	user := models.User{}
 	user.Firstname = data["firstname"]
 	user.Lastname = data["lastname"]
 	user.Email = data["email"]
-	user.Password = password
+	// user.Password = password
+	user.SetPassword(pwd_string)
 
 	db := database.DB
 	db.Create(&user)
@@ -76,7 +76,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	err = bcrypt.CompareHashAndPassword(user.Password, []byte(data["password"]))
+	err = user.ComparePassword(data["password"])
 	if err != nil {
 		c.Status(400)
 		return c.JSON(fiber.Map{
@@ -109,8 +109,6 @@ func User(c *fiber.Ctx) error {
 	cookie := c.Cookies("jwt")
 
 	id, _ := util.ParseJwt(cookie)
-
-	// claims := token.Claims.(*Claims)
 	var user models.User
 	database.DB.Where("id= ?", id).First(&user)
 
