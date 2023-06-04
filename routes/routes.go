@@ -16,6 +16,7 @@ func Setup(app *fiber.App) {
 	app.Use(middlewares.IsAuthenticated)
 
 	app.Get("/api/user", controllers.User)
+	app.Post("/api/logout", controllers.Logout)
 
 	app.Post("/api/users", controllers.CreateUser)
 	app.Get("/api/users", controllers.AllUsers)
@@ -29,5 +30,5 @@ func Setup(app *fiber.App) {
 	app.Put("/api/roles/:id", controllers.UpdateRole)
 	app.Delete("/api/roles/:id", controllers.DeleteRole)
 
-	app.Post("/api/logout", controllers.Logout)
+	app.Get("/api/permissions", controllers.AllPermissions)
 }
