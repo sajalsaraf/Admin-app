@@ -15,7 +15,7 @@ func Upload(c *fiber.Ctx) error {
 	for _, file := range files {
 		filename = file.Filename
 
-		if err := c.SaveFile(file, "./uploads/"+filename); err != nil {
+		if err := c.SaveFile(file, "./uploads/"+filename); err != nil { //saves file
 			return err
 		}
 	}
