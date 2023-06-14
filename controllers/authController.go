@@ -23,13 +23,13 @@ func Register(c *fiber.Ctx) error {
 
 	var data map[string]string
 
-	err := c.BodyParser(&data)
+	err := c.BodyParser(&data) // Get data from frontend/postman
 	if err != nil {
 		fmt.Println("error while receiving data from postman")
 	}
 
 	if data["password"] != data["confirm_passowrd"] {
-		c.Status(400)
+		c.Status(400) //status code -- bad request
 		return c.JSON(fiber.Map{
 			"msg": "passwords do not match",
 		})
@@ -47,7 +47,7 @@ func Register(c *fiber.Ctx) error {
 	user.Firstname = data["firstname"]
 	user.Lastname = data["lastname"]
 	user.Email = data["email"]
-	user.RoleId = 1
+	user.RoleId = 1 // Creates an admin user as for admin role id is 1
 	// user.Password = password
 	user.SetPassword(pwd_string)
 
@@ -71,7 +71,7 @@ func Login(c *fiber.Ctx) error {
 	db.Where("email = ?", data["email"]).First(&user)
 
 	if user.Id == 0 {
-		c.Status(404)
+		c.Status(404) //not found
 		return c.JSON(fiber.Map{
 			"msg": "entry not found",
 		})
@@ -85,12 +85,16 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
+	// Created a token which stores the user_id and expires in 24hrs
 	token, err := util.GenerateJwt(strconv.Itoa(int(user.Id))) // now claims operation in util package
 
 	if err != nil {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
+	// Stored the token in this cookie which is stored in frontend/postman
+	// The cookie is valid for 24 hrs
+	// Due to this cookie login is required only once in 24hrs
 	cookie := fiber.Cookie{
 		Name:     "jwt",
 		Value:    token,
@@ -141,9 +145,9 @@ func UpdateInfo(c *fiber.Ctx) error {
 
 	cookie := c.Cookies("jwt")
 
-	id, _ := util.ParseJwt(cookie)
+	id, _ := util.ParseJwt(cookie) // extract id from cookie
 
-	userId, _ := strconv.Atoi(id)
+	userId, _ := strconv.Atoi(id) //convert into int
 
 	user := models.User{
 		Id:        uint(userId),
@@ -151,7 +155,7 @@ func UpdateInfo(c *fiber.Ctx) error {
 		Lastname:  data["last_name"],
 		Email:     data["email"],
 	}
-	database.DB.Model(&user).Updates(data)
+	database.DB.Model(&user).Updates(data) // update into database
 
 	return c.JSON(user)
 }
@@ -172,8 +176,8 @@ func UpdatePassword(c *fiber.Ctx) error {
 
 	cookie := c.Cookies("jwt")
 
-	id, _ := util.ParseJwt(cookie)
-	userId, _ := strconv.Atoi(id)
+	id, _ := util.ParseJwt(cookie) // cookie store id in string
+	userId, _ := strconv.Atoi(id)  // convert into int
 	user := models.User{
 		Id: uint(userId),
 	}

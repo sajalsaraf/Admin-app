@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type User struct {
+type User struct { // shows database format of fields in users table
 	Id        uint   `json:"id"`
 	Firstname string `json:"first_name"`
 	Lastname  string `json:"last_name"`

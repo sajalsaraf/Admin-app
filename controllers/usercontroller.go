@@ -44,12 +44,12 @@ func GetUser(c *fiber.Ctx) error {
 		return err
 	}
 
-	id, _ := strconv.Atoi(c.Params("id"))
+	id, _ := strconv.Atoi(c.Params("id")) // id entered at api will store in this id varible
 
 	user := models.User{
-		Id: uint(id),
+		Id: uint(id), // making a new struct varible and store id in it
 	}
-	database.DB.Preload("Role").Find(&user)
+	database.DB.Preload("Role").Find(&user) // find func is used to find the entry corresponding to this id and preload func helps to get details of the entered foregin key
 	return c.JSON(user)
 }
 
