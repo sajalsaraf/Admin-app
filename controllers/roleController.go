@@ -85,7 +85,7 @@ func UpdateRole(c *fiber.Ctx) error {
 		Permissions: permissions,
 	}
 
-	database.DB.Model(&role).Updates(role)
+	database.DB.Model(&role).Updates(role) // this will update in "roles" table(using &role) with the value of role(last in Updates(role))
 	return c.JSON(role)
 }
 func DeleteRole(c *fiber.Ctx) error {
